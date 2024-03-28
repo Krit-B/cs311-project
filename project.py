@@ -39,7 +39,6 @@ def loginPage(root):
 def loginClicked():
     print()
     
-
 def checkoutPage(root):
     loginFrame.grid_forget()
     checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
@@ -51,7 +50,7 @@ def checkoutPage(root):
     Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
 
     for i in range(len(movies)):
-        Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(row=i+1,column=0)
+        movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(row=i+1,column=0)
         Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
         Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
         Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
@@ -61,35 +60,69 @@ def checkoutPage(root):
     Button(checkoutFrame,text="Back",bg="#B5C0D0",width=10).grid(row=5,column=2)
     checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
-def seatPage(root):
-    seatFrame.rowconfigure((0,1,2,3),weight=1)
-    seatFrame.columnconfigure((0,1),weight=1)
-    Label(seatFrame,text="Seat",bg="#FFE6E6").grid(row=1,column=0,sticky='e')
-    seat = ttk.Combobox(seatFrame,value=seats[0],textvariable=sspy).grid(row=1,column=1,sticky='w')
-    Button(seatFrame,text="Buy",bg="#FFE6E6",width=10).grid(row=3,column=0)
+def moviePage():
+
+    movieFrame = Frame(root,bg="#535C91")
+    movieFrame.rowconfigure((0,1,2,3,4),weight=1)
+    movieFrame.columnconfigure((0,1,2),weight=1)
+
+    Label(movieFrame,bg="#070F2B").grid(row=0,column=0,columnspan=3,sticky='news')
+
+    Button(movieFrame,text=moviesName[0]+"\n"+str(price[0]),compound='top',image=movies[0],command=lambda:seatPage(moviesName[0]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=0,sticky='news')
+    Button(movieFrame,text=moviesName[1]+"\n"+str(price[1]),compound='top',image=movies[1],command=lambda:seatPage(moviesName[1]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=1,sticky='news')
+    Button(movieFrame,text=moviesName[2]+"\n"+str(price[2]),compound='top',image=movies[2],command=lambda:seatPage(moviesName[2]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=2,sticky='news')
+
+    movieFrame.grid(column=0,row=0,columnspan=4,rowspan=4,sticky='news')
+
+def seatPage(movie):
+    # print(movie)
+    seatFrame = Frame(root,bg="#535C91")
+    seatFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
+    seatFrame.columnconfigure((0,1,2,3),weight=1)
+
+    Label(seatFrame,image=movies[getIndex(movie)],bg="#070F2B").grid(row=0,column=0,columnspan=4,sticky='news')
+    Label(seatFrame,text=movie,bg="#070F2B",fg="#B5C0D0").grid(row=1,column=0,columnspan=4,sticky='news')
+    choices = ['A','B','C']
+    findOption = StringVar()
+    findOption.set(choices[0])
+    option = OptionMenu(seatFrame,findOption,*choices)
+    option.grid(row=2,column=0,sticky='e')
+    Button(seatFrame,image=searchImg,borderwidth=0,bg="#535C91").grid(row=2,column=2,sticky='w')
+
+
+    Button(seatFrame,text="Back",command=backToMenu,bg="#B5C0D0",width=10).grid(row=6,column=2)
     seatFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
-# def occupy():
+def getIndex(moviename):
+    for i in range(len(moviesName)):
+        print(moviesName[i],moviename)
+        if moviesName[i] == moviename:
+            return i
+    return -1
 
+def backToMenu():
+    seatFrame.destroy()
+    moviePage()
 
 #---------main-------------------
 connection()
 root = mainWindow()
 userInfo,pwdInfo,sspy = StringVar(),StringVar(),StringVar()
-movie1Img = PhotoImage(file="images/movie1.png").subsample(2,2)
-movie2Img = PhotoImage(file="images/movie2.png").subsample(2,2)
-movie3Img = PhotoImage(file="images/movie3.png").subsample(2,2)
+searchImg = PhotoImage(file="images\search.png")
+movie1Img = PhotoImage(file="images/movie1.png")
+movie2Img = PhotoImage(file="images/movie2.png")
+movie3Img = PhotoImage(file="images/movie3.png")
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
 price = [160,220,280]
-seat1=["A1","A2","A3","A4","A5","B1","B2","B3","B4","B5"]
-seat2=["A1","A2","A3","A4","A5","B1","B2","B3","B4","B5"]
-seat3=["A1","A2","A3","A4","A5","B1","B2","B3","B4","B5"]
-seats = [seat1,seat2,seat3]
+seatA=["A1","A2","A3","A4"]
+seatB=["B1","B2","B3","B4"]
+seatC=["C1","C2","C3","C4"]
+seats = [seatA,seatB,seatC]
 loginFrame = Frame(root,bg="#FFBE98")
 checkoutFrame = Frame(root,bg="#222831")
 seatFrame = Frame(root,bg="#FFE6E6")
-loginPage(root)
+# loginPage(root)
 # checkoutPage(root)
-# seatPage(root)
+moviePage()
 root.mainloop()
