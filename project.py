@@ -76,21 +76,28 @@ def moviePage():
 
 def seatPage(movie):
     # print(movie)
+    global seatFrame,chooseSeatFrame
     seatFrame = Frame(root,bg="#535C91")
-    seatFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
+    seatFrame.rowconfigure((0,1,2,3,4,5,6,7,8),weight=1)
     seatFrame.columnconfigure((0,1,2,3),weight=1)
+
+    chooseSeatFrame = Frame(root,bg="#535C91")
+    chooseSeatFrame.rowconfigure((0,1,2),weight=1)
+    chooseSeatFrame.columnconfigure((0,1,2,3),weight=1)
+    chooseSeatFrame.grid(row=3,column=0,columnspan=4,sticky='news')
 
     Label(seatFrame,image=movies[getIndex(movie)],bg="#070F2B").grid(row=0,column=0,columnspan=4,sticky='news')
     Label(seatFrame,text=movie,bg="#070F2B",fg="#B5C0D0").grid(row=1,column=0,columnspan=4,sticky='news')
     choices = ['A','B','C']
+
+    global findOption
     findOption = StringVar()
     findOption.set(choices[0])
     option = OptionMenu(seatFrame,findOption,*choices)
     option.grid(row=2,column=0,sticky='e')
-    Button(seatFrame,image=searchImg,borderwidth=0,bg="#535C91").grid(row=2,column=2,sticky='w')
+    Button(seatFrame,image=searchImg,command=showSeatMenu,borderwidth=0,bg="#535C91").grid(row=2,column=2,sticky='w')
 
-
-    Button(seatFrame,text="Back",command=backToMenu,bg="#B5C0D0",width=10).grid(row=6,column=2)
+    Button(seatFrame,text="Back",command=backToMenu,bg="#B5C0D0",width=10).grid(row=2,column=3)
     seatFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
 def getIndex(moviename):
@@ -99,6 +106,18 @@ def getIndex(moviename):
         if moviesName[i] == moviename:
             return i
     return -1
+
+def showSeatMenu():
+    chooseSeat = ""
+    if findOption.get()=="A":
+        chooseSeat = seatA
+    elif findOption.get()=="B":
+        chooseSeat = seatB
+    elif findOption.get()=="C":
+        chooseSeat = seatC
+
+    Label(chooseSeatFrame,text=chooseSeat,bg="#070F2B",fg="#B5C0D0").grid(row=0,column=0,columnspan=4)
+    Button(chooseSeatFrame,text="Check Out").grid(row=2,column=0,columnspan=4)
 
 def backToMenu():
     seatFrame.destroy()
@@ -115,9 +134,9 @@ movie3Img = PhotoImage(file="images/movie3.png")
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
 price = [160,220,280]
-seatA=["A1","A2","A3","A4"]
-seatB=["B1","B2","B3","B4"]
-seatC=["C1","C2","C3","C4"]
+seatA={"A1":0,"A2":0,"A3":0,"A4":0}
+seatB={"B1":0,"B2":0,"B3":0,"B4":0}
+seatC={"C1":0,"C2":0,"C3":0,"C4":0}
 seats = [seatA,seatB,seatC]
 loginFrame = Frame(root,bg="#FFBE98")
 checkoutFrame = Frame(root,bg="#222831")
