@@ -9,7 +9,7 @@ def connection():
 
 def mainWindow():
     root = Tk()
-    w,h = 1024,800
+    w,h = 1024,900
     x = root.winfo_screenwidth()/2-w/2
     y = root.winfo_screenheight()/2-h/2
     root.geometry("%dx%d+%d+%d"%(w,h,x,y))
@@ -19,26 +19,56 @@ def mainWindow():
     root.columnconfigure((0,1,2,3),weight=1)
     return root
 
-def loginPage(root):
+def loginPage():
     global userEntry,pwdEntry
     loginFrame.rowconfigure((0,1,2,3,4),weight=1)
-    loginFrame.columnconfigure((0,1),weight=1)
+    loginFrame.columnconfigure((0,1,2),weight=1)
 
-    Label(loginFrame,text = "Login",bg="#FFBE98").grid(row=0,column=0,columnspan=2)
-    Label(loginFrame,text = "Username: ",bg="#FFBE98").grid(row=1,column=0,sticky='e')  
-    Label(loginFrame,text = "Password: ",bg="#FFBE98").grid(row=2,column=0,sticky='e')
-    userEntry = Entry(loginFrame)
-    userEntry.grid(row=1,column=1,sticky='w')
-    pwdEntry = Entry(loginFrame)
-    pwdEntry.grid(row=2,column=1,sticky='w')
+    Label(loginFrame,text = "Login",bg="#535C91").grid(row=0,column=0,columnspan=3)
+    Label(loginFrame,text = "Username: ",bg="#535C91").grid(row=1,column=0,sticky='e')  
+    Label(loginFrame,text = "Password: ",bg="#535C91").grid(row=2,column=0,sticky='e')
+    userEntry = Entry(loginFrame,textvariable=userInfo)
+    userEntry.grid(row=1,column=1,columnspan=2,sticky='w')
+    pwdEntry = Entry(loginFrame,show="*",textvariable=pwdInfo)
+    pwdEntry.grid(row=2,column=1,columnspan=2,sticky='w')
 
-    Button(loginFrame,text="Reset",command = loginClicked).grid(row=3,column=0,pady=10)
-    Button(loginFrame,text="Login",command = loginClicked).grid(row=3,column=1,pady=10)
+    Button(loginFrame,text="Reset",command = resetInfo).grid(row=3,column=0,pady=10)
+    Button(loginFrame,text="Register",command = registeration).grid(row=3,column=1,pady=10)
+    Button(loginFrame,text="Login",command = loginClicked).grid(row=3,column=2,pady=10)
     loginFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
 def loginClicked():
-    print()
+    global result
+    if userInfo.get()=="":
+        messagebox.showwarning("Admin:","Please Enter Your Username.")
+        userEntry.focus_force()
+    else:
+        sql = "select * from Customers where username=?" #change this
+        cursor.execute(sql,[userInfo.get()])
+        result = cursor.fetchall()
+        if result:
+            if pwdInfo.get()=="":
+                messagebox.showwarning("Admin:","Please ENter Your Password.")
+                pwdEntry.focus_force()
+            else:
+                sql = "select * from Customers where username=? and password=?" #change this
+                cursor.execute(sql,[userInfo.get(),pwdInfo.get()])
+                result = cursor.fetchall()
+                if result:
+                    messagebox.showinfo("Admin:","Login Succesfully.")
+                    welcomPage(result[0])
+                else:
+                    messagebox.showwarning("Admin:","Incorrect Password.")
+                    pwdEntry.select_range(0,END)
+                    pwdEntry.focus_force()
     
+def resetInfo():
+    userEntry.delete(0,END)
+    pwdEntry.delete(0,END)
+
+def registeration():
+    print("this is registration page")
+
 def checkoutPage(root):
     loginFrame.grid_forget()
     checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
@@ -108,21 +138,41 @@ def getIndex(moviename):
     return -1
 
 def showSeatMenu():
+    global seat1,seat2,seat3,seat4
     chooseSeat = ""
     if findOption.get()=="A":
         chooseSeat = seatA
+        seat1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A1",bg="red").grid(row=0,column=0)
+        seat2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A2",bg="red").grid(row=0,column=1)
+        seat3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A3",bg="red").grid(row=0,column=2)
+        seat4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A4",bg="red").grid(row=0,column=3)
     elif findOption.get()=="B":
         chooseSeat = seatB
+        seat1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B1",bg="red").grid(row=0,column=0)
+        seat2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B2",bg="red").grid(row=0,column=1)
+        seat3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B3",bg="red").grid(row=0,column=2)
+        seat4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B4",bg="red").grid(row=0,column=3)
     elif findOption.get()=="C":
         chooseSeat = seatC
-
-    Label(chooseSeatFrame,text=chooseSeat,bg="#070F2B",fg="#B5C0D0").grid(row=0,column=0,columnspan=4)
-    Button(chooseSeatFrame,text="Check Out").grid(row=2,column=0,columnspan=4)
+        seat1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C1",bg="red").grid(row=0,column=0)
+        seat2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C2",bg="red").grid(row=0,column=1)
+        seat3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C3",bg="red").grid(row=0,column=2)
+        seat4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C4",bg="red").grid(row=0,column=3)
+    
+    Button(chooseSeatFrame,text="Check Out",command=checkout).grid(row=2,column=0,columnspan=4)
 
 def backToMenu():
     seatFrame.destroy()
     moviePage()
 
+def seatCheck():
+    sql='''select ? from customers'''
+    cursor.execute(sql,[chooseSeat])
+    result = cursor.fetchall()
+    print(result)
+
+def checkout():
+    messagebox.showinfo("Checkout","Checkout Success")
 #---------main-------------------
 connection()
 root = mainWindow()
@@ -131,6 +181,7 @@ searchImg = PhotoImage(file="images\search.png")
 movie1Img = PhotoImage(file="images/movie1.png")
 movie2Img = PhotoImage(file="images/movie2.png")
 movie3Img = PhotoImage(file="images/movie3.png")
+seatImg = PhotoImage(file="images/seat.png").subsample(10,10)
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
 price = [160,220,280]
@@ -138,10 +189,10 @@ seatA={"A1":0,"A2":0,"A3":0,"A4":0}
 seatB={"B1":0,"B2":0,"B3":0,"B4":0}
 seatC={"C1":0,"C2":0,"C3":0,"C4":0}
 seats = [seatA,seatB,seatC]
-loginFrame = Frame(root,bg="#FFBE98")
-checkoutFrame = Frame(root,bg="#222831")
+loginFrame = Frame(root,bg="#535C91")
+checkoutFrame = Frame(root,bg="#070F2B")
 seatFrame = Frame(root,bg="#FFE6E6")
-# loginPage(root)
+loginPage()
 # checkoutPage(root)
-moviePage()
+# moviePage()
 root.mainloop()
