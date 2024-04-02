@@ -43,7 +43,7 @@ def loginClicked():
         messagebox.showwarning("Admin:","Please Enter Your Username.")
         userEntry.focus_force()
     else:
-        sql = "select * from Customers where username=?" #change this
+        sql = "select * from customers where user=?" #change this
         cursor.execute(sql,[userInfo.get()])
         result = cursor.fetchall()
         if result:
@@ -51,12 +51,12 @@ def loginClicked():
                 messagebox.showwarning("Admin:","Please ENter Your Password.")
                 pwdEntry.focus_force()
             else:
-                sql = "select * from Customers where username=? and password=?" #change this
+                sql = "select * from customers where user=? and pwd=?" #change this
                 cursor.execute(sql,[userInfo.get(),pwdInfo.get()])
                 result = cursor.fetchall()
                 if result:
                     messagebox.showinfo("Admin:","Login Succesfully.")
-                    welcomPage(result[0])
+                    moviePage(result[0])
                 else:
                     messagebox.showwarning("Admin:","Incorrect Password.")
                     pwdEntry.select_range(0,END)
@@ -103,7 +103,7 @@ def backToLogin():
     loginPage()
 
 def registration():
-    print("Hello from registration")
+    # print("Hello from registration")
     if fullname.get() == "" :
         messagebox.showwarning("Admin: ","Please enter firstname")
         fullname.focus_force()
@@ -139,13 +139,13 @@ def registration():
                 param = [count+1,fullname.get(),lastname.get(),newuser.get(),newpwd.get(),0,0,0,0,1]
                 cursor.execute(sql,param)
                 conn.commit()
-                backToLogin()
                 messagebox.showinfo("Admin:","Registration Successfully")
                 newuser.delete(0,END)
                 newpwd.delete(0,END)
                 cfpwd.delete(0,END)
                 fullname.delete(0,END)
                 lastname.delete(0,END)
+                backToLogin()
             else :
                 messagebox.showwarning("Admin: ","Incorrect a confirm password\n Try again")
                 cfpwd.selection_range(0,END)
@@ -163,7 +163,7 @@ def checkoutPage():
     Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
 
     for i in range(len(movies)):
-        movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(row=i+1,column=0)
+        movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
         Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
         Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
         Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
@@ -173,13 +173,15 @@ def checkoutPage():
     Button(checkoutFrame,text="Back",bg="#B5C0D0",width=10).grid(row=5,column=2)
     checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
-def moviePage():
-
+def moviePage(userlist):
+    userinfo = userlist
+    fullname = userlist[1]+" "+userlist[2]
+    # print(userinfo)
     movieFrame = Frame(root,bg="#535C91")
     movieFrame.rowconfigure((0,1,2,3,4),weight=1)
     movieFrame.columnconfigure((0,1,2),weight=1)
-
     Label(movieFrame,bg="#070F2B").grid(row=0,column=0,columnspan=3,sticky='news')
+    Label(movieFrame,text="Welcome, "+fullname,bg="#070F2B",fg="white").grid(row=0,column=0,columnspan=3,sticky='news')
 
     Button(movieFrame,text=moviesName[0]+"\n"+str(price[0]),compound='top',image=movies[0],command=lambda:seatPage(moviesName[0]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=0,sticky='news')
     Button(movieFrame,text=moviesName[1]+"\n"+str(price[1]),compound='top',image=movies[1],command=lambda:seatPage(moviesName[1]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=1,sticky='news')
@@ -221,38 +223,43 @@ def getIndex(moviename):
     return -1
 
 def showSeatMenu():
-    global seat1,seat2,seat3,seat4
+    # global seat1,seat2,seat3,seat4
     chooseSeat = ""
     if findOption.get()=="A":
-        chooseSeat = seatA
-        seat1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A1",bg="red").grid(row=0,column=0)
-        seat2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A2",bg="red").grid(row=0,column=1)
-        seat3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A3",bg="red").grid(row=0,column=2)
-        seat4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A4",bg="red").grid(row=0,column=3)
+        chooseSeat = "seatA"
+        seatA1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A1",bg="green").grid(row=0,column=0)
+        seatA2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A2",bg="green").grid(row=0,column=1)
+        seatA3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A3",bg="green").grid(row=0,column=2)
+        seatA4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A4",bg="green").grid(row=0,column=3)
+        seatCheck(chooseSeat)
     elif findOption.get()=="B":
-        chooseSeat = seatB
-        seat1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B1",bg="red").grid(row=0,column=0)
-        seat2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B2",bg="red").grid(row=0,column=1)
-        seat3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B3",bg="red").grid(row=0,column=2)
-        seat4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B4",bg="red").grid(row=0,column=3)
+        chooseSeat = "seatB"
+        seatB1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B1",bg="green").grid(row=0,column=0)
+        seatB2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B2",bg="green").grid(row=0,column=1)
+        seatB3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B3",bg="green").grid(row=0,column=2)
+        seatB4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B4",bg="green").grid(row=0,column=3)
+        seatCheck(chooseSeat)
     elif findOption.get()=="C":
-        chooseSeat = seatC
-        seat1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C1",bg="red").grid(row=0,column=0)
-        seat2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C2",bg="red").grid(row=0,column=1)
-        seat3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C3",bg="red").grid(row=0,column=2)
-        seat4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C4",bg="red").grid(row=0,column=3)
+        chooseSeat = "seatC"
+        seatC1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C1",bg="green").grid(row=0,column=0)
+        seatC2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C2",bg="green").grid(row=0,column=1)
+        seatC3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C3",bg="green").grid(row=0,column=2)
+        seatC4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C4",bg="green").grid(row=0,column=3)
+        seatCheck(chooseSeat)
     
     Button(chooseSeatFrame,text="Check Out",command=checkout).grid(row=2,column=0,columnspan=4)
 
-def backToMenu():
-    seatFrame.destroy()
-    moviePage()
-
-def seatCheck():
-    sql='''select ? from customers'''
-    cursor.execute(sql,[chooseSeat])
+def seatCheck(seat):
+    sql = '''
+            select %s from customers;
+          '''%(seat)
+    cursor.execute(sql)
     result = cursor.fetchall()
     print(result)
+
+def backToMenu():
+    seatFrame.destroy()
+    moviePage(result[0])
 
 def checkout():
     messagebox.showinfo("Checkout","Checkout Success")
@@ -261,9 +268,10 @@ connection()
 root = mainWindow()
 userInfo,pwdInfo,sspy = StringVar(),StringVar(),StringVar()
 searchImg = PhotoImage(file="images\search.png")
-movie1Img = PhotoImage(file="images/movie1.png").subsample(3,3)
-movie2Img = PhotoImage(file="images/movie2.png").subsample(3,3)
-movie3Img = PhotoImage(file="images/movie3.png").subsample(3,3)
+#Should i add same larger image for moviePage ?
+movie1Img = PhotoImage(file="images/movie1.png").subsample(2,2)
+movie2Img = PhotoImage(file="images/movie2.png").subsample(2,2)
+movie3Img = PhotoImage(file="images/movie3.png").subsample(2,2)
 seatImg = PhotoImage(file="images/seat.png").subsample(10,10)
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
