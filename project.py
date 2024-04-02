@@ -151,6 +151,8 @@ def registration():
                 cfpwd.focus_force()
 
 def moviePage(userlist):
+    global movieFrame
+
     userinfo = userlist
     fullname = userlist[1]+" "+userlist[2]
     # print(userinfo)
@@ -211,7 +213,7 @@ def showSeatMenu():
     for i, seatNumber in enumerate(seatOption[choosenRow]):
         seat = Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="green").grid(row=0,column=i)
 
-    Button(chooseSeatFrame,text="Check Out",command=checkout).grid(row=2,column=0,columnspan=4)
+    Button(chooseSeatFrame,text="Check Out",command=lambda:checkout()).grid(row=2,column=0,columnspan=4)
 
 def seatCheck(seat):
     sql = '''
@@ -249,25 +251,28 @@ def checkout():
 
 
 def checkoutPage(seatA,seatB,seatC):
-    # loginFrame.grid_forget()
+    seatFrame.grid_forget()
+    chooseSeatFrame.grid_forget()
+    movieFrame.grid_forget()
+
     checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
     checkoutFrame.columnconfigure((0,1,2,3),weight=1)
-    Label(checkoutFrame,text="Movie",bg="#B5C0D0").grid(row=0,column=0)
-    Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=0,column=1)
-    Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=0,column=2)
-    Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
+    # Label(checkoutFrame,text="Movie",bg="#B5C0D0").grid(row=0,column=0)
+    # Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=0,column=1)
+    # Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=0,column=2)
+    # Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
 
-    for i in range(len(movies)):
-        movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
-        Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
-        Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
-        Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
+    # for i in range(len(movies)):
+    #     movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
+    #     Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
+    #     Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
+    #     Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
 
     count = countSeat(seatA)+countSeat(seatB)+countSeat(seatC)
     
-    # Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
-    # Label(checkoutFrame,image=movies[getIndex(selectedMovie)],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
-    # Label(checkoutFrame,text="Number of seats: %d"%(count),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
+    Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
+    Label(checkoutFrame,image=movies[getIndex(selectedMovie)],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
+    Label(checkoutFrame,text="Number of seats: %d"%(count),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
 
     Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
     Button(checkoutFrame,text="Checkout",bg="#B5C0D0",width=10).grid(row=5,column=1)
@@ -277,7 +282,7 @@ def checkoutPage(seatA,seatB,seatC):
 def countSeat(seat):
     count = 0
     for i,item in enumerate(seat):
-        if item == 1:
+        if item.get() == 1:
             count+=1
     return count
 
