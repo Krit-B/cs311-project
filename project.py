@@ -28,12 +28,12 @@ def loginPage():
     Label(loginFrame,text = "Username: ",bg="#535C91").grid(row=1,column=0,sticky='e')  
     Label(loginFrame,text = "Password: ",bg="#535C91").grid(row=2,column=0,sticky='e')
     userEntry = Entry(loginFrame,textvariable=userInfo)
-    userEntry.grid(row=1,column=1,columnspan=2,sticky='w')
+    userEntry.grid(row=1,column=1,sticky='w')
     pwdEntry = Entry(loginFrame,show="*",textvariable=pwdInfo)
-    pwdEntry.grid(row=2,column=1,columnspan=2,sticky='w')
+    pwdEntry.grid(row=2,column=1,sticky='w')
 
     Button(loginFrame,text="Reset",command = resetInfo).grid(row=3,column=0,pady=10)
-    Button(loginFrame,text="Register",command = registeration).grid(row=3,column=1,pady=10)
+    Button(loginFrame,text="Register",command = regiswindow).grid(row=3,column=1,pady=10)
     Button(loginFrame,text="Login",command = loginClicked).grid(row=3,column=2,pady=10)
     loginFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
@@ -66,10 +66,93 @@ def resetInfo():
     userEntry.delete(0,END)
     pwdEntry.delete(0,END)
 
-def registeration():
-    print("this is registration page")
+def regiswindow() : #activity of week11
+    global fullname,lastname,newuser,newpwd,cfpwd,regisframe
+    #loginframe.destroy()
+    # root.title("Welcome to User Registration : ")
+    root.config(bg='#d2e69c')
+    regisframe = Frame(root,bg='#8fd9a8')
+    regisframe.rowconfigure((0,1,2,3,4,5,6),weight=1)
+    regisframe.columnconfigure((0,1),weight=1)
+    Label(regisframe,text="Registration Form",font="Garamond 26 bold",fg='#e4fbff',compound=LEFT,bg='#28b5b5').grid(row=0,column=0,columnspan=2,sticky='news',pady=10)
+    Label(regisframe,text='Full name : ',bg='#8fd9a8',fg='#f6f5f5').grid(row=1,column=0,sticky='e',padx=10)
+    fullname = Entry(regisframe,width=20,bg='#d3e0ea')
+    fullname.grid(row=1,column=1,sticky='w',padx=10)
+    Label(regisframe,text='Last name : ',bg='#8fd9a8',fg='#f6f5f5').grid(row=2,column=0,sticky='e',padx=10)
+    lastname = Entry(regisframe,width=20,bg='#d3e0ea')
+    lastname.grid(row=2,column=1,sticky='w',padx=10)
+    Label(regisframe,text="Username : ",bg='#8fd9a8',fg='#f6f5f5').grid(row=3,column=0,sticky='e',padx=10)
+    newuser = Entry(regisframe,width=20,bg='#d3e0ea')
+    newuser.grid(row=3,column=1,sticky='w',padx=10)
+    Label(regisframe,text="Password : ",bg='#8fd9a8',fg='#f6f5f5').grid(row=4,column=0,sticky='e',padx=10)
+    newpwd = Entry(regisframe,width=20,bg='#a1cae2',show='*')
+    newpwd.grid(row=4,column=1,sticky='w',padx=10)
+    Label(regisframe,text="Confirm Password : ",bg='#8fd9a8',fg='#f6f5f5').grid(row=5,column=0,sticky='e',padx=10)
+    cfpwd = Entry(regisframe,width=20,bg='#a1cae2',show='*')
+    cfpwd.grid(row=5,column=1,sticky='w',padx=10)
+    regisaction = Button(regisframe,text="Register Submit",command=registration)
+    regisaction.grid(row=6,column=0,ipady=5,ipadx=5,pady=5,sticky='e')
+    fullname.focus_force()
+    loginbtn = Button(regisframe,text="Back to Login",command=backToLogin)
+    loginbtn.grid(row=6,column=1,ipady=5,ipadx=5,pady=5,sticky='w',padx=10)
+    regisframe.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
-def checkoutPage(root):
+
+def backToLogin():
+    regisframe.destroy()
+    loginPage()
+
+def registration():
+    print("Hello from registration")
+    if fullname.get() == "" :
+        messagebox.showwarning("Admin: ","Please enter firstname")
+        fullname.focus_force()
+    elif lastname.get() == "" :
+        messagebox.showwarning("Admin: ","Pleasse enter lastname")
+        lastname.focus_force()
+    elif newuser.get() == "" :
+        messagebox.showwarning("Admin: ","Please enter a new username")
+        newuser.focus_force()
+    elif newpwd.get() == "" :
+        messagebox.showwarning("Admin: ","Please enter a password")
+        newpwd.focus_force()
+    elif cfpwd.get() == "" :
+        messagebox.showwarning("Admin: ","Please enter a confirm password")
+        cfpwd.focus_force()
+    else :
+        sql = "select * from customers where user=?"
+        cursor.execute(sql,[newuser.get()])
+        result = cursor.fetchall()
+        if result :
+            messagebox.showerror("Admin:","The username is already exists")
+            newuser.select_range(0,END)
+            newuser.focus_force()
+        else :
+            if newpwd.get() == cfpwd.get() : #a new pwd / confirm is correct 
+                #count number of customers    
+                sql = "select count(*) from customers"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                count = result[0][0]
+
+                sql = "insert into customers values (?,?,?,?,?,?,?,?,?,?)"
+                param = [count+1,fullname.get(),lastname.get(),newuser.get(),newpwd.get(),0,0,0,0,1]
+                cursor.execute(sql,param)
+                conn.commit()
+                backToLogin()
+                messagebox.showinfo("Admin:","Registration Successfully")
+                newuser.delete(0,END)
+                newpwd.delete(0,END)
+                cfpwd.delete(0,END)
+                fullname.delete(0,END)
+                lastname.delete(0,END)
+            else :
+                messagebox.showwarning("Admin: ","Incorrect a confirm password\n Try again")
+                cfpwd.selection_range(0,END)
+                cfpwd.focus_force()
+
+
+def checkoutPage():
     loginFrame.grid_forget()
     checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
     checkoutFrame.columnconfigure((0,1,2,3),weight=1)
@@ -178,9 +261,9 @@ connection()
 root = mainWindow()
 userInfo,pwdInfo,sspy = StringVar(),StringVar(),StringVar()
 searchImg = PhotoImage(file="images\search.png")
-movie1Img = PhotoImage(file="images/movie1.png")
-movie2Img = PhotoImage(file="images/movie2.png")
-movie3Img = PhotoImage(file="images/movie3.png")
+movie1Img = PhotoImage(file="images/movie1.png").subsample(3,3)
+movie2Img = PhotoImage(file="images/movie2.png").subsample(3,3)
+movie3Img = PhotoImage(file="images/movie3.png").subsample(3,3)
 seatImg = PhotoImage(file="images/seat.png").subsample(10,10)
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
@@ -190,9 +273,9 @@ seatB={"B1":0,"B2":0,"B3":0,"B4":0}
 seatC={"C1":0,"C2":0,"C3":0,"C4":0}
 seats = [seatA,seatB,seatC]
 loginFrame = Frame(root,bg="#535C91")
-checkoutFrame = Frame(root,bg="#070F2B")
+checkoutFrame = Frame(root,bg="#B5C0D0")
 seatFrame = Frame(root,bg="#FFE6E6")
 loginPage()
-# checkoutPage(root)
+# checkoutPage()
 # moviePage()
 root.mainloop()
