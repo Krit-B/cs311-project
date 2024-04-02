@@ -97,7 +97,6 @@ def regiswindow() : #activity of week11
     loginbtn.grid(row=6,column=1,ipady=5,ipadx=5,pady=5,sticky='w',padx=10)
     regisframe.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
-
 def backToLogin():
     regisframe.destroy()
     loginPage()
@@ -151,28 +150,6 @@ def registration():
                 cfpwd.selection_range(0,END)
                 cfpwd.focus_force()
 
-
-def checkoutPage():
-    loginFrame.grid_forget()
-    checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
-    checkoutFrame.columnconfigure((0,1,2,3),weight=1)
-
-    Label(checkoutFrame,text="Movie",bg="#B5C0D0").grid(row=0,column=0)
-    Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=0,column=1)
-    Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=0,column=2)
-    Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
-
-    for i in range(len(movies)):
-        movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
-        Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
-        Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
-        Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
-
-    Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
-    Button(checkoutFrame,text="Checkout",bg="#B5C0D0",width=10).grid(row=5,column=1)
-    Button(checkoutFrame,text="Back",bg="#B5C0D0",width=10).grid(row=5,column=2)
-    checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
-
 def moviePage(userlist):
     userinfo = userlist
     fullname = userlist[1]+" "+userlist[2]
@@ -191,7 +168,8 @@ def moviePage(userlist):
 
 def seatPage(movie):
     # print(movie)
-    global seatFrame,chooseSeatFrame
+    global seatFrame,chooseSeatFrame,selectedMovie
+    selectedMovie = movie
     seatFrame = Frame(root,bg="#535C91")
     seatFrame.rowconfigure((0,1,2,3,4,5,6,7,8),weight=1)
     seatFrame.columnconfigure((0,1,2,3),weight=1)
@@ -217,36 +195,45 @@ def seatPage(movie):
 
 def getIndex(moviename):
     for i in range(len(moviesName)):
-        print(moviesName[i],moviename)
+        # print(moviesName[i],moviename)
         if moviesName[i] == moviename:
             return i
     return -1
 
 def showSeatMenu():
-    # global seat1,seat2,seat3,seat4
-    chooseSeat = ""
-    if findOption.get()=="A":
-        chooseSeat = "seatA"
-        seatA1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A1",bg="green").grid(row=0,column=0)
-        seatA2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A2",bg="green").grid(row=0,column=1)
-        seatA3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A3",bg="green").grid(row=0,column=2)
-        seatA4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A4",bg="green").grid(row=0,column=3)
-        seatCheck(chooseSeat)
-    elif findOption.get()=="B":
-        chooseSeat = "seatB"
-        seatB1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B1",bg="green").grid(row=0,column=0)
-        seatB2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B2",bg="green").grid(row=0,column=1)
-        seatB3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B3",bg="green").grid(row=0,column=2)
-        seatB4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B4",bg="green").grid(row=0,column=3)
-        seatCheck(chooseSeat)
-    elif findOption.get()=="C":
-        chooseSeat = "seatC"
-        seatC1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C1",bg="green").grid(row=0,column=0)
-        seatC2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C2",bg="green").grid(row=0,column=1)
-        seatC3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C3",bg="green").grid(row=0,column=2)
-        seatC4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C4",bg="green").grid(row=0,column=3)
-        seatCheck(chooseSeat)
-    
+    # global seatA1,seatA2,seatA3,seatA4,seatB1,seatB2,seatB3,seatB4,seatC1,seatC2,seatC3,seatC4
+    # chooseSeat = ""
+    # if findOption.get()=="A":
+    #     chooseSeat = "seatA"
+    #     seatA1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A1",bg="green").grid(row=0,column=0)
+    #     seatA2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A2",bg="green").grid(row=0,column=1)
+    #     seatA3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A3",bg="green").grid(row=0,column=2)
+    #     seatA4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat A4",bg="green").grid(row=0,column=3)
+    #     seatCheck(chooseSeat)
+    # elif findOption.get()=="B":
+    #     chooseSeat = "seatB"
+    #     seatB1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B1",bg="green").grid(row=0,column=0)
+    #     seatB2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B2",bg="green").grid(row=0,column=1)
+    #     seatB3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B3",bg="green").grid(row=0,column=2)
+    #     seatB4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat B4",bg="green").grid(row=0,column=3)
+    #     seatCheck(chooseSeat)
+    # elif findOption.get()=="C":
+    #     chooseSeat = "seatC"
+    #     seatC1=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C1",bg="green").grid(row=0,column=0)
+    #     seatC2=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C2",bg="green").grid(row=0,column=1)
+    #     seatC3=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C3",bg="green").grid(row=0,column=2)
+    #     seatC4=Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text="Seat C4",bg="green").grid(row=0,column=3)
+    #     seatCheck(chooseSeat)
+    global seat
+    seatOption = {"A":["A1","A2","A3","A4"],
+                  "B":["B1","B2","B3","B4"],
+                  "C":["C1","C2","C3","C4"]}
+
+    choosenRow = findOption.get()
+    slist = seatList.get(choosenRow)
+    for i, seatNumber in enumerate(seatOption[choosenRow]):
+        seat = Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="green").grid(row=0,column=i)
+
     Button(chooseSeatFrame,text="Check Out",command=checkout).grid(row=2,column=0,columnspan=4)
 
 def seatCheck(seat):
@@ -259,14 +246,73 @@ def seatCheck(seat):
 
 def backToMenu():
     seatFrame.destroy()
+    for i in range(4):
+        seatVarAList[i].set(0)
+        seatVarBList[i].set(0)
+        seatVarCList[i].set(0)
     moviePage(result[0])
 
 def checkout():
-    messagebox.showinfo("Checkout","Checkout Success")
+    # messagebox.showinfo("Checkout","Checkout Success")
+    seatA =seatList.get("A")   #local
+    seatB =seatList.get("B") #local
+    seatC = seatList.get("C")   #local
+    
+    # for i,item in enumerate(seatA):
+    #     print(item.get())
+    print("Checkout")
+
+    # print(findOption.get()) #global
+    # print(selectedMovie) # global
+    checkoutPage(seatA,seatB,seatC)
+    # seatFrame.grid_forget()
+
+
+def checkoutPage(seatA,seatB,seatC):
+    # loginFrame.grid_forget()
+    checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
+    checkoutFrame.columnconfigure((0,1,2,3),weight=1)
+
+    # Label(checkoutFrame,text="Movie",bg="#B5C0D0").grid(row=0,column=0)
+    # Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=0,column=1)
+    # Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=0,column=2)
+    # Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
+
+    # for i in range(len(movies)):
+    #     movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
+    #     Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
+    #     Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
+    #     Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
+
+    count = countSeat(seatA)+countSeat(seatB)+countSeat(seatC)
+    
+    Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
+    Label(checkoutFrame,image=movies[getIndex(selectedMovie)],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
+    Label(checkoutFrame,text="Number of seats: %d"%(count),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
+
+    Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
+    Button(checkoutFrame,text="Checkout",bg="#B5C0D0",width=10).grid(row=5,column=1)
+    Button(checkoutFrame,text="Back",bg="#B5C0D0",width=10).grid(row=5,column=2)
+    checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
+
+def countSeat(seat):
+    count = 0
+    for i,item in enumerate(seat):
+        if item == 1:
+            count+=1
+    return count
+
 #---------main-------------------
 connection()
 root = mainWindow()
 userInfo,pwdInfo,sspy = StringVar(),StringVar(),StringVar()
+seatVarA1,seatVarA2,seatVarA3,seatVarA4 = IntVar(),IntVar(),IntVar(),IntVar()
+seatVarB1,seatVarB2,seatVarB3,seatVarB4 = IntVar(),IntVar(),IntVar(),IntVar()
+seatVarC1,seatVarC2,seatVarC3,seatVarC4 = IntVar(),IntVar(),IntVar(),IntVar()
+seatVarAList = [seatVarA1,seatVarA2,seatVarA3,seatVarA4]
+seatVarBList = [seatVarB1,seatVarB2,seatVarB3,seatVarB4]
+seatVarCList = [seatVarC1,seatVarC2,seatVarC3,seatVarC4]
+seatList = {"A":seatVarAList,"B":seatVarBList,"C":seatVarCList}
 searchImg = PhotoImage(file="images\search.png")
 #Should i add same larger image for moviePage ?
 movie1Img = PhotoImage(file="images/movie1.png").subsample(2,2)
@@ -276,10 +322,6 @@ seatImg = PhotoImage(file="images/seat.png").subsample(10,10)
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
 price = [160,220,280]
-seatA={"A1":0,"A2":0,"A3":0,"A4":0}
-seatB={"B1":0,"B2":0,"B3":0,"B4":0}
-seatC={"C1":0,"C2":0,"C3":0,"C4":0}
-seats = [seatA,seatB,seatC]
 loginFrame = Frame(root,bg="#535C91")
 checkoutFrame = Frame(root,bg="#B5C0D0")
 seatFrame = Frame(root,bg="#FFE6E6")
