@@ -151,7 +151,7 @@ def registration():
                 cfpwd.focus_force()
 
 def moviePage(userlist):
-    global movieFrame
+    global movieFrame, userinfo
 
     userinfo = userlist
     fullname = userlist[1]+" "+userlist[2]
@@ -280,7 +280,7 @@ def checkoutPage(seatA,seatB,seatC):
     Label(checkoutFrame,text="Total Price: $%d"%(total),bg="#B5C0D0").grid(row=3,column=0,columnspan=4)
 
     Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
-    Button(checkoutFrame,text="Checkout",bg="#B5C0D0",width=10).grid(row=5,column=1)
+    Button(checkoutFrame,text="Checkout",bg="#B5C0D0",command=lambda:saveToDB(seatA,seatB,seatC),width=10).grid(row=5,column=1)
     Button(checkoutFrame,text="Back",bg="#B5C0D0",command=backToMenu,width=10).grid(row=5,column=2)
     checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
@@ -290,6 +290,56 @@ def countSeat(seat):
         if item.get() == 1:
             count+=1
     return count
+
+def saveToDB(seatA,seatB,seatC):
+    print("save to db")
+
+    userseat=[]
+    for i,item in enumerate(seatA):  #can access user's seat
+        print("row: "+str(i))
+        if(seatA[i].get()==1):
+            print("A"+str(i))
+            userseat.append("A"+str(i))
+        # print(seatA[i].get())
+        if(seatB[i].get()==1):
+            print("B"+str(i))
+            userseat.append("B"+str(i))
+        # print(seatB[i].get())
+        if(seatC[i].get()==1):
+            print("C"+str(i))
+            userseat.append("C"+str(i))
+        # print(seatC[i].get())
+
+    # print("Checkout")
+    print(selectedMovie) # global | can access user's movie
+
+    theater1,theater2,theater3,theater4="","","",""
+
+    for movie in moviesName:
+        if selectedMovie == movie:
+            index = getIndex(selectedMovie)
+            for seat in userseat:
+                sql = "select count(*) from customers"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                count = result[0][0]
+                print(count)
+
+                if index == 0:
+                    theater1=seat
+                elif index == 1:
+                    theater2 = seat
+                elif index == 2:
+                    theater3 = seat
+                elif index == 3:
+                    theater4 = seat
+
+                sql = '''
+                        insert into customers values(?,?,?,?,?,?,?,?,?,?);    
+                    '''
+                cursor.execute(sql,[count+1,userinfo[1],userinfo[2],userinfo[3],userinfo[4],theater1,theater2,theater3,theater4,userinfo[9]])
+                conn.commit()
+                messagebox.showinfo("Admin:","Checkout Succesfully.")
 
 #---------main-------------------
 connection()
