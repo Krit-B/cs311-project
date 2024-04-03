@@ -210,9 +210,38 @@ def showSeatMenu():
 
     choosenRow = findOption.get()
     slist = seatList.get(choosenRow)
+    chooseTheater = ""
+    for movie in moviesName:
+        if selectedMovie == movie:
+            index = getIndex(selectedMovie)
+            if index == 0:
+                sql = '''
+                        select theater1 from customers;
+                     '''
+            elif index == 1:
+                sql = '''
+                        select theater2 from customers;
+                      '''
+            elif index == 2:
+                sql = '''
+                        select theater3 from customers;
+                      '''
+            elif index == 3:
+                sql = '''
+                        select theater4 from customers;
+                      '''
+    
+    cursor.execute(sql)
+    result = cursor.fetchall() #[('0',), ('A1',), ('B2',), ('C3',)]
+    occupiedSeat = []
+    for i in range(len(result)):
+        occupiedSeat.append(result[i][0])
     for i, seatNumber in enumerate(seatOption[choosenRow]):
-        seat = Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="green").grid(row=0,column=i)
-
+        if seatNumber in occupiedSeat:
+            seat = Checkbutton(chooseSeatFrame,image=seatImg,state='disabled',compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="red").grid(row=0,column=i)
+        else:
+            seat = Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="green").grid(row=0,column=i)
+        
     Button(chooseSeatFrame,text="Check Out",command=lambda:checkout()).grid(row=2,column=0,columnspan=4)
 
 def seatCheck(seat):
@@ -220,7 +249,7 @@ def seatCheck(seat):
             select %s from customers;
           '''%(seat)
     cursor.execute(sql)
-    result = cursor.fetchall()
+    result = cursor.fetchall() 
     print(result)
 
 def backToMenu():
@@ -251,7 +280,6 @@ def checkout():
     print(selectedMovie) # global
     checkoutPage(seatA,seatB,seatC)
     # seatFrame.grid_forget()
-
 
 def checkoutPage(seatA,seatB,seatC):
     seatFrame.grid_forget()
@@ -299,15 +327,15 @@ def saveToDB(seatA,seatB,seatC):
         print("row: "+str(i))
         if(seatA[i].get()==1):
             print("A"+str(i))
-            userseat.append("A"+str(i))
+            userseat.append("A"+str(i+1))
         # print(seatA[i].get())
         if(seatB[i].get()==1):
             print("B"+str(i))
-            userseat.append("B"+str(i))
+            userseat.append("B"+str(i+1))
         # print(seatB[i].get())
         if(seatC[i].get()==1):
             print("C"+str(i))
-            userseat.append("C"+str(i))
+            userseat.append("C"+str(i+1))
         # print(seatC[i].get())
 
     # print("Checkout")
@@ -336,10 +364,11 @@ def saveToDB(seatA,seatB,seatC):
 
                 sql = '''
                         insert into customers values(?,?,?,?,?,?,?,?,?,?);    
-                    '''
+                      '''
                 cursor.execute(sql,[count+1,userinfo[1],userinfo[2],userinfo[3],userinfo[4],theater1,theater2,theater3,theater4,userinfo[9]])
                 conn.commit()
-                messagebox.showinfo("Admin:","Checkout Succesfully.")
+    messagebox.showinfo("Admin:","Checkout Succesfully.")
+
 
 #---------main-------------------
 connection()
