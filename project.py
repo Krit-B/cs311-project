@@ -224,7 +224,10 @@ def seatCheck(seat):
     print(result)
 
 def backToMenu():
-    seatFrame.destroy()
+    if seatFrame:
+        seatFrame.destroy()
+    elif checkoutFrame:
+        checkoutFrame.destroy()
     for i in range(4):
         seatVarAList[i].set(0)
         seatVarBList[i].set(0)
@@ -267,16 +270,18 @@ def checkoutPage(seatA,seatB,seatC):
     #     Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
     #     Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
     #     Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
-
+    movieIndex = getIndex(selectedMovie)
     count = countSeat(seatA)+countSeat(seatB)+countSeat(seatC)
-    
+    total = count * price[movieIndex]
+
     Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
-    Label(checkoutFrame,image=movies[getIndex(selectedMovie)],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
+    Label(checkoutFrame,image=movies[movieIndex],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
     Label(checkoutFrame,text="Number of seats: %d"%(count),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
+    Label(checkoutFrame,text="Total Price: $%d"%(total),bg="#B5C0D0").grid(row=3,column=0,columnspan=4)
 
     Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
     Button(checkoutFrame,text="Checkout",bg="#B5C0D0",width=10).grid(row=5,column=1)
-    Button(checkoutFrame,text="Back",bg="#B5C0D0",width=10).grid(row=5,column=2)
+    Button(checkoutFrame,text="Back",bg="#B5C0D0",command=backToMenu,width=10).grid(row=5,column=2)
     checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
 def countSeat(seat):
