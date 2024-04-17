@@ -285,13 +285,20 @@ def checkoutPage(seatA,seatB,seatC):
     seatFrame.grid_forget()
     chooseSeatFrame.grid_forget()
     movieFrame.grid_forget()
-
     checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
     checkoutFrame.columnconfigure((0,1,2,3),weight=1)
-    # Label(checkoutFrame,text="Movie",bg="#B5C0D0").grid(row=0,column=0)
-    # Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=0,column=1)
-    # Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=0,column=2)
-    # Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=0,column=3)
+
+    choosedSeat = ""
+    for i in range(len(seatA)):
+        if(seatA[i].get()==1):
+            # print("A"+str(i+1))
+            choosedSeat+=" A"+str(i+1)
+        if(seatB[i].get()==1):
+            # print("B"+str(i+1))
+            choosedSeat+=" B"+str(i+1)
+        if(seatC[i].get()==1):
+            # print("C"+str(i+1))
+            choosedSeat+=" C"+str(i+1)
 
     # for i in range(len(movies)):
     #     movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
@@ -304,16 +311,24 @@ def checkoutPage(seatA,seatB,seatC):
 
     Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
     Label(checkoutFrame,image=movies[movieIndex],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
-    Label(checkoutFrame,text="Number of seats: %d"%(count),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
+    Label(checkoutFrame,text="Number of seats: %d * %d"%(count,price[movieIndex]),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
     Label(checkoutFrame,text="Total Price: $%d"%(total),bg="#B5C0D0").grid(row=3,column=0,columnspan=4)
 
-    Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
+    # Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
+    Label(checkoutFrame,text="Seat: %s"%(choosedSeat),bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
     Button(checkoutFrame,text="Checkout",bg="#B5C0D0",command=lambda:saveToDB(seatA,seatB,seatC),width=10).grid(row=5,column=1)
     Button(checkoutFrame,text="Back",bg="#B5C0D0",command=backToMenu,width=10).grid(row=5,column=2)
     checkoutFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
 def countSeat(seat):
     count = 0
+    for i,item in enumerate(seat):
+        if item.get() == 1:
+            count+=1
+    return count
+
+def checkSeat(seat):
+    seat = ""
     for i,item in enumerate(seat):
         if item.get() == 1:
             count+=1
