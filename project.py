@@ -22,21 +22,26 @@ def mainWindow():
 
 def loginPage():
     global userEntry,pwdEntry
-    loginFrame.rowconfigure((0,1,2,3,4),weight=1)
+    loginFrame.rowconfigure((0,1,2),weight=1)
     loginFrame.columnconfigure((0,1,2),weight=1)
 
-    Label(loginFrame,text = "Welcome, Please Login",bg="#535C91").grid(row=0,column=0,columnspan=3)
-    Label(loginFrame,text = "Username: ",bg="#535C91").grid(row=1,column=0,sticky='e')  
-    Label(loginFrame,text = "Password: ",bg="#535C91").grid(row=2,column=0,sticky='e')
-    userEntry = Entry(loginFrame,textvariable=userInfo)
+    insideLoginFrame = Frame(loginFrame,bg="#535C91")
+    insideLoginFrame.rowconfigure((0,1,2,3,4),weight=1)
+    insideLoginFrame.columnconfigure((0,1,2),weight=1)
+
+    Label(insideLoginFrame,text = "Welcome, Please Login",bg="#535C91").grid(row=0,column=0,columnspan=3)
+    Label(insideLoginFrame,text = "Username: ",bg="#535C91").grid(row=1,column=0,sticky='e')  
+    Label(insideLoginFrame,text = "Password: ",bg="#535C91").grid(row=2,column=0,sticky='e')
+    userEntry = Entry(insideLoginFrame,textvariable=userInfo)
     userEntry.grid(row=1,column=1,sticky='w')
-    pwdEntry = Entry(loginFrame,show="*",textvariable=pwdInfo)
+    pwdEntry = Entry(insideLoginFrame,show="*",textvariable=pwdInfo)
     pwdEntry.grid(row=2,column=1,sticky='w')
 
-    Button(loginFrame,text="Reset",command = resetInfo).grid(row=3,column=0,pady=10)
-    Button(loginFrame,text="Register",command = regiswindow).grid(row=3,column=1,pady=10)
-    Button(loginFrame,text="Login",command = loginClicked).grid(row=3,column=2,pady=10)
+    Button(insideLoginFrame,text="Reset",command = resetInfo).grid(row=3,column=0,pady=10)
+    Button(insideLoginFrame,text="Register",command = regiswindow).grid(row=3,column=1,pady=10)
+    Button(insideLoginFrame,text="Login",command = loginClicked).grid(row=3,column=2,pady=10)
     loginFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
+    insideLoginFrame.grid(row=1,column=1,sticky='news')
 
 def loginClicked():
     global result
@@ -243,9 +248,7 @@ def showSeatMenu():
             seat = Checkbutton(chooseSeatFrame,image=seatImg,state='disabled',compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="red").grid(row=0,column=i)
         else:
             seat = Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="green").grid(row=0,column=i)
-    Label(chooseSeatFrame,text="Seat").grid(row=2,column=0,columnspan=4)
-    Label(chooseSeatFrame,text="Price").grid(row=3,column=0,columnspan=4)
-    Button(chooseSeatFrame,text="Check Out",command=lambda:checkout()).grid(row=4,column=0,columnspan=4)
+    Button(chooseSeatFrame,text="Check Out",command=lambda:checkout()).grid(row=2,column=0,columnspan=4)
 
 def seatCheck(seat):
     sql = '''
