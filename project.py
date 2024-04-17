@@ -13,6 +13,7 @@ def mainWindow():
     x = root.winfo_screenwidth()/2-w/2
     y = root.winfo_screenheight()/2-h/2
     root.geometry("%dx%d+%d+%d"%(w,h,x,y))
+    root.title("Ticket Reseravtion System")
     root.config(bg="#B5C0D0")
     root.option_add("*font","Helvetica 16 bold")
     root.rowconfigure((0,1,2,3),weight=1)
@@ -24,7 +25,7 @@ def loginPage():
     loginFrame.rowconfigure((0,1,2,3,4),weight=1)
     loginFrame.columnconfigure((0,1,2),weight=1)
 
-    Label(loginFrame,text = "Login",bg="#535C91").grid(row=0,column=0,columnspan=3)
+    Label(loginFrame,text = "Welcome, Please Login",bg="#535C91").grid(row=0,column=0,columnspan=3)
     Label(loginFrame,text = "Username: ",bg="#535C91").grid(row=1,column=0,sticky='e')  
     Label(loginFrame,text = "Password: ",bg="#535C91").grid(row=2,column=0,sticky='e')
     userEntry = Entry(loginFrame,textvariable=userInfo)
@@ -177,7 +178,7 @@ def seatPage(movie):
     seatFrame.columnconfigure((0,1,2,3),weight=1)
 
     chooseSeatFrame = Frame(root,bg="#535C91")
-    chooseSeatFrame.rowconfigure((0,1,2),weight=1)
+    chooseSeatFrame.rowconfigure((0,1,2,3,4),weight=1)
     chooseSeatFrame.columnconfigure((0,1,2,3),weight=1)
     chooseSeatFrame.grid(row=3,column=0,columnspan=4,sticky='news')
 
@@ -236,13 +237,15 @@ def showSeatMenu():
     occupiedSeat = []
     for i in range(len(result)):
         occupiedSeat.append(result[i][0])
+    Label(chooseSeatFrame,bg='white').grid(row=0,column=0,columnspan=4,sticky='news')
     for i, seatNumber in enumerate(seatOption[choosenRow]):
         if seatNumber in occupiedSeat:
             seat = Checkbutton(chooseSeatFrame,image=seatImg,state='disabled',compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="red").grid(row=0,column=i)
         else:
             seat = Checkbutton(chooseSeatFrame,image=seatImg,compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="green").grid(row=0,column=i)
-        
-    Button(chooseSeatFrame,text="Check Out",command=lambda:checkout()).grid(row=2,column=0,columnspan=4)
+    Label(chooseSeatFrame,text="Seat").grid(row=2,column=0,columnspan=4)
+    Label(chooseSeatFrame,text="Price").grid(row=3,column=0,columnspan=4)
+    Button(chooseSeatFrame,text="Check Out",command=lambda:checkout()).grid(row=4,column=0,columnspan=4)
 
 def seatCheck(seat):
     sql = '''
@@ -311,7 +314,7 @@ def checkoutPage(seatA,seatB,seatC):
 
     Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
     Label(checkoutFrame,image=movies[movieIndex],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
-    Label(checkoutFrame,text="Number of seats: %d * %d"%(count,price[movieIndex]),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
+    Label(checkoutFrame,text="Number of seats: %d * %d Baths"%(count,price[movieIndex]),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
     Label(checkoutFrame,text="Total Price: $%d"%(total),bg="#B5C0D0").grid(row=3,column=0,columnspan=4)
 
     # Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
