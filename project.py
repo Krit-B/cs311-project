@@ -337,7 +337,10 @@ def checkoutPage(seatA,seatB,seatC):
 
     movieIndex = getIndex(selectedMovie)
     count = countSeat(seatA)+countSeat(seatB)+countSeat(seatC)
-    total = count * price[movieIndex]
+    if userinfo[9] == '1':
+        total = count * price[movieIndex]*0.9
+    else:
+        total = count * price[movieIndex]
 
     Label(checkoutFrame,text="Checkout",bg="#070F2B",fg='white').grid(row=0,column=0,columnspan=4,sticky='news')
     Label(checkoutFrame,image=movies[movieIndex],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
