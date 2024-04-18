@@ -40,8 +40,15 @@ def loginPage():
     Button(insideLoginFrame,text="Reset",command = resetInfo).grid(row=3,column=0,pady=10)
     Button(insideLoginFrame,text="Register",command = regiswindow).grid(row=3,column=1,pady=10)
     Button(insideLoginFrame,text="Login",command = loginClicked).grid(row=3,column=2,pady=10)
+    Button(insideLoginFrame,text="Login as Guest",command = guestLogin).grid(row=4,column=0,columnspan=3,pady=10)
+
     loginFrame.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
     insideLoginFrame.grid(row=1,column=1,sticky='news')
+
+def guestLogin():
+    global guestInfo
+    guestInfo = (0, 'guest', 'guest', 'guest', 'guest', '0', '0', '0', '0', '0')
+    moviePage(guestInfo)
 
 def loginClicked():
     global result
@@ -62,6 +69,7 @@ def loginClicked():
                 result = cursor.fetchall()
                 if result:
                     messagebox.showinfo("Admin:","Login Succesfully.")
+                    print(result[0])
                     moviePage(result[0])
                 else:
                     messagebox.showwarning("Admin:","Incorrect Password.")
@@ -102,7 +110,7 @@ def regiswindow() : #activity of week11
     regisframe.grid(row=0,column=0,columnspan=4,rowspan=4,sticky='news')
 
 def backToLogin():
-    regisframe.destroy()
+    regisframe.grid_forget()
     loginPage()
 
 def registration():
@@ -155,7 +163,7 @@ def registration():
                 cfpwd.focus_force()
 
 def logout():
-    movieFrame.destroy()
+    movieFrame.grid_forget()
     loginPage()
     userEntry.delete(0,END)
     pwdEntry.delete(0,END)
@@ -192,7 +200,7 @@ def forAdmin():
 def seatPage(movie):
     # print(movie)
     global seatFrame,chooseSeatFrame,selectedMovie
-    movieFrame.destroy()
+    movieFrame.grid_forget()
     selectedMovie = movie
     seatFrame = Frame(root,bg="#535C91")
     seatFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9),weight=1)
@@ -276,14 +284,19 @@ def seatCheck(seat):
 
 def backToMenu():
     if seatFrame:
-        seatFrame.destroy()
+        seatFrame.grid_forget()
     if checkoutFrame:
-        checkoutFrame.destroy()
+        checkoutFrame.grid_forget()
+    if chooseSeatFrame:
+        chooseSeatFrame.grid_forget()
     for i in range(4):
         seatVarAList[i].set(0)
         seatVarBList[i].set(0)
         seatVarCList[i].set(0)
-    moviePage(result[0])
+    if userinfo[1] == 'guest':
+        moviePage(guestInfo)
+    else:
+        moviePage(result[0])
 
 def checkout():
     # messagebox.showinfo("Checkout","Checkout Success")
@@ -331,7 +344,6 @@ def checkoutPage(seatA,seatB,seatC):
     Label(checkoutFrame,text="Number of seats: %d * %d Baths"%(count,price[movieIndex]),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
     Label(checkoutFrame,text="Total Price: $%d"%(total),bg="#B5C0D0").grid(row=3,column=0,columnspan=4)
 
-    # Checkbutton(checkoutFrame,text="Discount for Membership",bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
     Label(checkoutFrame,text="Seat: %s"%(choosedSeat),bg="#B5C0D0").grid(row=4,column=0,columnspan=4)
     Button(checkoutFrame,text="Checkout",bg="#B5C0D0",command=lambda:saveToDB(seatA,seatB,seatC),width=10).grid(row=5,column=1)
     Button(checkoutFrame,text="Back",bg="#B5C0D0",command=backToMenu,width=10).grid(row=5,column=2)
