@@ -74,8 +74,6 @@ def resetInfo():
 
 def regiswindow() : #activity of week11
     global fullname,lastname,newuser,newpwd,cfpwd,regisframe
-    #loginframe.destroy()
-    # root.title("Welcome to User Registration : ")
     root.config(bg='#d2e69c')
     regisframe = Frame(root,bg='#8fd9a8')
     regisframe.rowconfigure((0,1,2,3,4,5,6),weight=1)
@@ -269,7 +267,7 @@ def seatCheck(seat):
 def backToMenu():
     if seatFrame:
         seatFrame.destroy()
-    elif checkoutFrame:
+    if checkoutFrame:
         checkoutFrame.destroy()
     for i in range(4):
         seatVarAList[i].set(0)
@@ -298,7 +296,7 @@ def checkout():
 def checkoutPage(seatA,seatB,seatC):
     seatFrame.grid_forget()
     chooseSeatFrame.grid_forget()
-    movieFrame.grid_forget()
+    # movieFrame.grid_forget()
     checkoutFrame.rowconfigure((0,1,2,3,4,5,6),weight=1)
     checkoutFrame.columnconfigure((0,1,2,3),weight=1)
 
@@ -397,7 +395,6 @@ def saveToDB(seatA,seatB,seatC):
                 cursor.execute(sql,[count+1,userinfo[1],userinfo[2],userinfo[3],userinfo[4],theater1,theater2,theater3,theater4,userinfo[9]])
                 conn.commit()
     messagebox.showinfo("Admin:","Checkout Succesfully.")
-
 
 #---------main-------------------
 connection()
