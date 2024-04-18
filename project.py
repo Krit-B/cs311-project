@@ -156,6 +156,12 @@ def registration():
                 cfpwd.selection_range(0,END)
                 cfpwd.focus_force()
 
+def logout():
+    movieFrame.destroy()
+    loginPage()
+    userEntry.delete(0,END)
+    pwdEntry.delete(0,END)
+
 def moviePage(userlist):
     global movieFrame, userinfo
 
@@ -172,11 +178,13 @@ def moviePage(userlist):
     Button(movieFrame,text=moviesName[1]+"\n"+str(price[1]),compound='top',image=movies[1],command=lambda:seatPage(moviesName[1]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=1,sticky='news')
     Button(movieFrame,text=moviesName[2]+"\n"+str(price[2]),compound='top',image=movies[2],command=lambda:seatPage(moviesName[2]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=2,sticky='news')
 
+    Button(movieFrame,text="Log Out",command=logout).grid(row=3,column=0,columnspan=3)
     movieFrame.grid(column=0,row=0,columnspan=4,rowspan=4,sticky='news')
 
 def seatPage(movie):
     # print(movie)
     global seatFrame,chooseSeatFrame,selectedMovie
+    movieFrame.destroy()
     selectedMovie = movie
     seatFrame = Frame(root,bg="#535C91")
     seatFrame.rowconfigure((0,1,2,3,4,5,6,7,8),weight=1)
