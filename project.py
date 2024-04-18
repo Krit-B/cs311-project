@@ -75,23 +75,23 @@ def resetInfo():
 def regiswindow() : #activity of week11
     global fullname,lastname,newuser,newpwd,cfpwd,regisframe
     root.config(bg='#d2e69c')
-    regisframe = Frame(root,bg='#8fd9a8')
+    regisframe = Frame(root,bg='#535C91')
     regisframe.rowconfigure((0,1,2,3,4,5,6),weight=1)
     regisframe.columnconfigure((0,1),weight=1)
-    Label(regisframe,text="Registration Form",font="Garamond 26 bold",fg='#e4fbff',compound=LEFT,bg='#28b5b5').grid(row=0,column=0,columnspan=2,sticky='news',pady=10)
-    Label(regisframe,text='Full name : ',bg='#8fd9a8',fg='#f6f5f5').grid(row=1,column=0,sticky='e',padx=10)
+    Label(regisframe,text="Registration Form",fg='#e4fbff',compound=LEFT,bg='#070F2B').grid(row=0,column=0,columnspan=2,sticky='news',pady=10)
+    Label(regisframe,text='Full name : ',bg='#535C91',fg='#f6f5f5').grid(row=1,column=0,sticky='e',padx=10)
     fullname = Entry(regisframe,width=20,bg='#d3e0ea')
     fullname.grid(row=1,column=1,sticky='w',padx=10)
-    Label(regisframe,text='Last name : ',bg='#8fd9a8',fg='#f6f5f5').grid(row=2,column=0,sticky='e',padx=10)
+    Label(regisframe,text='Last name : ',bg='#535C91',fg='#f6f5f5').grid(row=2,column=0,sticky='e',padx=10)
     lastname = Entry(regisframe,width=20,bg='#d3e0ea')
     lastname.grid(row=2,column=1,sticky='w',padx=10)
-    Label(regisframe,text="Username : ",bg='#8fd9a8',fg='#f6f5f5').grid(row=3,column=0,sticky='e',padx=10)
+    Label(regisframe,text="Username : ",bg='#535C91',fg='#f6f5f5').grid(row=3,column=0,sticky='e',padx=10)
     newuser = Entry(regisframe,width=20,bg='#d3e0ea')
     newuser.grid(row=3,column=1,sticky='w',padx=10)
-    Label(regisframe,text="Password : ",bg='#8fd9a8',fg='#f6f5f5').grid(row=4,column=0,sticky='e',padx=10)
+    Label(regisframe,text="Password : ",bg='#535C91',fg='#f6f5f5').grid(row=4,column=0,sticky='e',padx=10)
     newpwd = Entry(regisframe,width=20,bg='#a1cae2',show='*')
     newpwd.grid(row=4,column=1,sticky='w',padx=10)
-    Label(regisframe,text="Confirm Password : ",bg='#8fd9a8',fg='#f6f5f5').grid(row=5,column=0,sticky='e',padx=10)
+    Label(regisframe,text="Confirm Password : ",bg='#535C91',fg='#f6f5f5').grid(row=5,column=0,sticky='e',padx=10)
     cfpwd = Entry(regisframe,width=20,bg='#a1cae2',show='*')
     cfpwd.grid(row=5,column=1,sticky='w',padx=10)
     regisaction = Button(regisframe,text="Register Submit",command=registration)
@@ -176,7 +176,6 @@ def moviePage(userlist):
     else:
         Label(movieFrame,text="Welcome, "+fullname,bg="#070F2B",fg="white").grid(row=0,column=0,columnspan=3,sticky='news')
 
-
     Button(movieFrame,image=movies[0],command=lambda:seatPage(moviesName[0]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=0,sticky='news')
     Button(movieFrame,image=movies[1],command=lambda:seatPage(moviesName[1]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=1,sticky='news')
     Button(movieFrame,image=movies[2],command=lambda:seatPage(moviesName[2]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=2,sticky='news')
@@ -184,19 +183,19 @@ def moviePage(userlist):
     for i in range(3):
         Label(movieFrame,text=moviesName[i]+"\nTicket Price: "+str(price[i]),bg="#535C91",fg="white").grid(row=2,column=i,sticky='news')
 
-
     Button(movieFrame,text="Log Out",command=logout).grid(row=3,column=0,columnspan=3)
     movieFrame.grid(column=0,row=0,columnspan=4,rowspan=4,sticky='news')
 
 def forAdmin():
     print("A")
+
 def seatPage(movie):
     # print(movie)
     global seatFrame,chooseSeatFrame,selectedMovie
     movieFrame.destroy()
     selectedMovie = movie
     seatFrame = Frame(root,bg="#535C91")
-    seatFrame.rowconfigure((0,1,2,3,4,5,6,7,8),weight=1)
+    seatFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9),weight=1)
     seatFrame.columnconfigure((0,1,2,3),weight=1)
 
     chooseSeatFrame = Frame(root,bg="#535C91")
@@ -259,7 +258,7 @@ def showSeatMenu():
     occupiedSeat = []
     for i in range(len(result)):
         occupiedSeat.append(result[i][0])
-    Label(chooseSeatFrame,bg='white').grid(row=0,column=0,columnspan=4,sticky='news')
+    Label(chooseSeatFrame,bg='#070F2B').grid(row=0,column=0,columnspan=4,sticky='news')
     for i, seatNumber in enumerate(seatOption[choosenRow]):
         if seatNumber in occupiedSeat:
             seat = Checkbutton(chooseSeatFrame,image=seatImg,state='disabled',compound='top',text=seatNumber,variable=slist[i],onvalue=1,offvalue=0,bg="red").grid(row=0,column=i)
@@ -299,8 +298,8 @@ def checkout():
         print(seatC[i].get())
 
     # print("Checkout")
-    print(findOption.get()) #global
-    print(selectedMovie) # global
+    # print(findOption.get()) #global
+    # print(selectedMovie) # global
     checkoutPage(seatA,seatB,seatC)
     # seatFrame.grid_forget()
 
@@ -323,16 +322,11 @@ def checkoutPage(seatA,seatB,seatC):
             # print("C"+str(i+1))
             choosedSeat+=" C"+str(i+1)
 
-    # for i in range(len(movies)):
-    #     movieImg = Label(checkoutFrame,image=movies[i],text=moviesName[i],compound='top',bg="#B5C0D0").grid(pady=20,row=i+1,column=0)
-    #     Label(checkoutFrame,text="Amount",bg="#B5C0D0").grid(row=i+1,column=1)
-    #     Label(checkoutFrame,text="Price",bg="#B5C0D0").grid(row=i+1,column=2)
-    #     Label(checkoutFrame,text="Total",bg="#B5C0D0").grid(row=i+1,column=3)
     movieIndex = getIndex(selectedMovie)
     count = countSeat(seatA)+countSeat(seatB)+countSeat(seatC)
     total = count * price[movieIndex]
 
-    Label(checkoutFrame,text="Checkout",bg="#B5C0D0").grid(row=0,column=0,columnspan=4)
+    Label(checkoutFrame,text="Checkout",bg="#070F2B",fg='white').grid(row=0,column=0,columnspan=4,sticky='news')
     Label(checkoutFrame,image=movies[movieIndex],bg="#B5C0D0").grid(row=1,column=0,columnspan=4)
     Label(checkoutFrame,text="Number of seats: %d * %d Baths"%(count,price[movieIndex]),bg="#B5C0D0").grid(row=2,column=0,columnspan=4)
     Label(checkoutFrame,text="Total Price: $%d"%(total),bg="#B5C0D0").grid(row=3,column=0,columnspan=4)
