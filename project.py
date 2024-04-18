@@ -167,18 +167,29 @@ def moviePage(userlist):
     fullname = userlist[1]+" "+userlist[2]
     # print(userinfo)
     movieFrame = Frame(root,bg="#535C91")
-    movieFrame.rowconfigure((0,1,2,3,4),weight=1)
+    movieFrame.rowconfigure((0,1,2,3),weight=1)
     movieFrame.columnconfigure((0,1,2),weight=1)
     Label(movieFrame,bg="#070F2B").grid(row=0,column=0,columnspan=3,sticky='news')
-    Label(movieFrame,text="Welcome, "+fullname,bg="#070F2B",fg="white").grid(row=0,column=0,columnspan=3,sticky='news')
+    if userlist[1] == "admin":  
+        Label(movieFrame,text="Welcome, "+fullname,bg="#070F2B",fg="white").grid(row=0,column=0,columnspan=2,sticky='news')
+        Button(movieFrame,text="For Admin",command=forAdmin,bg="#B5C0D0",width=10).grid(row=0,column=2)
+    else:
+        Label(movieFrame,text="Welcome, "+fullname,bg="#070F2B",fg="white").grid(row=0,column=0,columnspan=3,sticky='news')
 
-    Button(movieFrame,text=moviesName[0]+"\n"+str(price[0]),compound='top',image=movies[0],command=lambda:seatPage(moviesName[0]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=0,sticky='news')
-    Button(movieFrame,text=moviesName[1]+"\n"+str(price[1]),compound='top',image=movies[1],command=lambda:seatPage(moviesName[1]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=1,sticky='news')
-    Button(movieFrame,text=moviesName[2]+"\n"+str(price[2]),compound='top',image=movies[2],command=lambda:seatPage(moviesName[2]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=2,sticky='news')
+
+    Button(movieFrame,image=movies[0],command=lambda:seatPage(moviesName[0]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=0,sticky='news')
+    Button(movieFrame,image=movies[1],command=lambda:seatPage(moviesName[1]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=1,sticky='news')
+    Button(movieFrame,image=movies[2],command=lambda:seatPage(moviesName[2]),borderwidth=0,bg="#535C91").grid (row=1,ipady=10,column=2,sticky='news')
+
+    for i in range(3):
+        Label(movieFrame,text=moviesName[i]+"\nTicket Price: "+str(price[i]),bg="#535C91",fg="white").grid(row=2,column=i,sticky='news')
+
 
     Button(movieFrame,text="Log Out",command=logout).grid(row=3,column=0,columnspan=3)
     movieFrame.grid(column=0,row=0,columnspan=4,rowspan=4,sticky='news')
 
+def forAdmin():
+    print("A")
 def seatPage(movie):
     # print(movie)
     global seatFrame,chooseSeatFrame,selectedMovie
@@ -409,9 +420,9 @@ seatVarCList = [seatVarC1,seatVarC2,seatVarC3,seatVarC4]
 seatList = {"A":seatVarAList,"B":seatVarBList,"C":seatVarCList}
 searchImg = PhotoImage(file="images\search.png")
 #Should i add same larger image for moviePage ?
-movie1Img = PhotoImage(file="images/movie1.png").subsample(2,2)
-movie2Img = PhotoImage(file="images/movie2.png").subsample(2,2)
-movie3Img = PhotoImage(file="images/movie3.png").subsample(2,2)
+movie1Img = PhotoImage(file="images/movie1.png")
+movie2Img = PhotoImage(file="images/movie2.png")
+movie3Img = PhotoImage(file="images/movie3.png")
 seatImg = PhotoImage(file="images/seat.png").subsample(10,10)
 movies = [movie1Img,movie2Img,movie3Img]
 moviesName = ["Your Name","Weathering with You","Suzume no Tojimari"]
