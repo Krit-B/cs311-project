@@ -47,7 +47,7 @@ def loginPage():
 
 def guestLogin():
     global guestInfo
-    guestInfo = (0, 'guest', 'guest', 'guest', 'guest', '0', '0', '0', '0', '0')
+    guestInfo = (0, 'guest', 'guest', 'guest', 'guest', '0')
     moviePage(guestInfo)
 
 def loginClicked():
@@ -146,8 +146,8 @@ def registration():
                 result = cursor.fetchall()
                 count = result[0][0]
 
-                sql = "insert into customers values (?,?,?,?,?,?,?,?,?,?)"
-                param = [count+1,fullname.get(),lastname.get(),newuser.get(),newpwd.get(),0,0,0,0,1]
+                sql = "insert into customers values (?,?,?,?,?,?)"
+                param = [count+1,fullname.get(),lastname.get(),newuser.get(),newpwd.get(),1]
                 cursor.execute(sql,param)
                 conn.commit()
                 messagebox.showinfo("Admin:","Registration Successfully")
@@ -246,19 +246,19 @@ def showSeatMenu():
             index = getIndex(selectedMovie)
             if index == 0:
                 sql = '''
-                        select theater1 from customers;
+                        select theater1 from tickets;
                      '''
             elif index == 1:
                 sql = '''
-                        select theater2 from customers;
+                        select theater2 from tickets;
                       '''
             elif index == 2:
                 sql = '''
-                        select theater3 from customers;
+                        select theater3 from tickets;
                       '''
             elif index == 3:
                 sql = '''
-                        select theater4 from customers;
+                        select theater4 from tickets;
                       '''
     
     cursor.execute(sql)
@@ -276,7 +276,7 @@ def showSeatMenu():
 
 def seatCheck(seat):
     sql = '''
-            select %s from customers;
+            select %s from tickets;
           '''%(seat)
     cursor.execute(sql)
     result = cursor.fetchall() 
@@ -337,7 +337,7 @@ def checkoutPage(seatA,seatB,seatC):
 
     movieIndex = getIndex(selectedMovie)
     count = countSeat(seatA)+countSeat(seatB)+countSeat(seatC)
-    if userinfo[9] == '1':
+    if userinfo[5] == '1':
         total = count * price[movieIndex]*0.9
     else:
         total = count * price[movieIndex]
@@ -394,11 +394,10 @@ def saveToDB(seatA,seatB,seatC):
         if selectedMovie == movie:
             index = getIndex(selectedMovie)
             for seat in userseat:
-                sql = "select count(*) from customers"
+                sql = "select cus_id from customers"
                 cursor.execute(sql)
                 result = cursor.fetchall()
-                count = result[0][0]
-                print(count)
+                cusID = result[0][0]
 
                 if index == 0:
                     theater1=seat
@@ -410,9 +409,9 @@ def saveToDB(seatA,seatB,seatC):
                     theater4 = seat
 
                 sql = '''
-                        insert into customers values(?,?,?,?,?,?,?,?,?,?);    
+                        insert into tickets values(?,?,?,?);    
                       '''
-                cursor.execute(sql,[count+1,userinfo[1],userinfo[2],userinfo[3],userinfo[4],theater1,theater2,theater3,theater4,userinfo[9]])
+                cursor.execute(sql,[cusID,theater1,theater2,theater3])
                 conn.commit()
     messagebox.showinfo("Admin:","Checkout Succesfully.")
 
